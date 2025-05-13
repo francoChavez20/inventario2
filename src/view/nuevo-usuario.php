@@ -29,7 +29,28 @@
                         <div class="col-9">
                             <input type="text" class="form-control" id="telefono" name="telefono">
                         </div>
-                    </div>         
+                    </div>   
+                    <div class="form-group row mb-2">
+                        <label for="password" class="col-3 col-form-label">Contraseña </label>
+                        <div class="col-9">
+                        <input type="text" class="form-control" id="password" name="password" placeholder="Ingrese contraseña" oninput="ocultarPassword()">
+
+<script>
+function ocultarPassword() {
+    const input = document.getElementById("password");
+
+    // Si aún no está en modo password, cambiarlo después de 2 segundos
+    if (input.type === "text") {
+        clearTimeout(input.timer); // Evita que se superpongan los tiempos
+        input.timer = setTimeout(() => {
+            input.type = "password";
+        }, 2000); // Cambia a password después de 2 segundos
+    }
+}
+</script>
+
+                        </div>
+                    </div>      
                     <div class="form-group mb-0 justify-content-end row text-center">
                         <div class="col-12">
                         <a href="<?php echo BASE_URL;?>usuarios" class="btn btn-light waves-effect waves-light">Regresar</a>
