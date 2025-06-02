@@ -202,9 +202,9 @@ try {
     <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Correo Empresarial</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cambio de Contraseña</title>
   <style>
     body {
       margin: 0;
@@ -215,18 +215,28 @@ try {
       max-width: 600px;
       margin: auto;
       background-color: #ffffff;
-      font-family: Arial, sans-serif;
-      color: #333333;
-      border: 1px solid #dddddd;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     .header {
       background-color: #004aad;
-      color: white;
+      display: flex;
+      align-items: center;
       padding: 20px;
-      text-align: center;
+    }
+    .header img {
+      max-height: 50px;
+      margin-right: 15px;
+    }
+    .header h2 {
+      color: white;
+      font-size: 20px;
+      margin: 0;
     }
     .content {
       padding: 30px;
+      color: #333333;
     }
     .content h1 {
       font-size: 22px;
@@ -234,7 +244,8 @@ try {
     }
     .content p {
       font-size: 16px;
-      line-height: 1.5;
+      line-height: 1.6;
+      margin: 10px 0;
     }
     .button {
       display: inline-block;
@@ -244,20 +255,30 @@ try {
       margin: 20px 0;
       text-decoration: none;
       border-radius: 4px;
+      font-weight: bold;
     }
     .footer {
       background-color: #eeeeee;
       text-align: center;
-      padding: 15px;
+      padding: 20px;
       font-size: 12px;
       color: #666666;
     }
+    .footer a {
+      color: #004aad;
+      text-decoration: none;
+    }
     @media screen and (max-width: 600px) {
-      .content, .header, .footer {
-        padding: 15px !important;
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
       }
-      .button {
-        padding: 10px 20px !important;
+      .header img {
+        margin-bottom: 10px;
+      }
+      .content, .footer {
+        padding: 20px !important;
       }
     }
   </style>
@@ -265,26 +286,26 @@ try {
 <body>
   <div class="container">
     <div class="header">
-      <h2>Nombre de tu empresa</h2>
+      <!-- Reemplaza el src con la URL de tu logo -->
+      <img src="https://yt3.googleusercontent.com/9SW8oaf9yd4Ia4ud-MrDwbiBNwVtt-md-7MEHhWEWUZxTgpIwqAAynnFBPVXC4TOsM9HG1RB=s900-c-k-c0x00ffffff-no-rj" alt="Logo de Brisa Marina" />
+      <h2>Brisa Marina</h2>
     </div>
     <div class="content">
-      <h1>Hola [Nombre del cliente],</h1>
-      <p>
-        Te saludamos cordialmente. Queremos informarte sobre nuestras últimas novedades y promociones exclusivas para ti.
-      </p>
-      <p>
-        ¡No te pierdas nuestras ofertas especiales por tiempo limitado!
-      </p>
-      <a href="https://www.tusitio.com/promocion" class="button">Ver más</a>
-      <p>Gracias por confiar en nosotros.</p>
+      <h1>Cambio de Contraseña Solicitado</h1>
+      <p>Hola [Nombre del cliente],</p>
+      <p>Hemos recibido una solicitud para restablecer tu contraseña. Si tú realizaste esta solicitud, haz clic en el siguiente botón para cambiar tu contraseña:</p>
+      <a href="[ENLACE_DE_CAMBIO]" class="button">Restablecer contraseña</a>
+      <p>Si no solicitaste este cambio, puedes ignorar este mensaje. Tu contraseña actual seguirá siendo válida.</p>
+      <p>Gracias,<br>El equipo de Brisa Marina</p>
     </div>
     <div class="footer">
-      © 2025 Nombre de tu empresa. Todos los derechos reservados.<br>
-      <a href="https://www.tusitio.com/desuscribirse">Cancelar suscripción</a>
+      © 2025 Brisa Marina. Todos los derechos reservados.<br>
+      <a href="https://www.tusitio.com/contacto">Contactar soporte</a>
     </div>
   </div>
 </body>
 </html>
+
     ';
     
 
