@@ -24,6 +24,20 @@ $objAdmin = new AdminModel();
 $id_sesion = $_POST['sesion'];
 $token = $_POST['token'];
 
+if ($tipo == "validar_datos_reset_password") {
+  $id_email = $_POST['id'];
+  $token_email = $_POST['token'];
+  $arr_Respuesta = array('status' => false, 'mensaje' => 'Link Caducado');
+  $datos_usuario = $objUsuario ->buscarUsuarioById($id_email);
+  if ($datos_usuario->reset_password==1 && password_verify($datos_usuario->token_password,$token_email)) {
+      $arr_Respuesta = array('status' => true, 'mensaje' => 'ok');
+
+  }
+  echo json_encode($arr_Respuesta);
+}
+
+
+
 if ($tipo == "listar_usuarios_ordenados_tabla") {
     $arr_Respuesta = array('status' => false, 'msg' => 'Error_Sesion');
     if ($objSesion->verificar_sesion_si_activa($id_sesion, $token)) {
@@ -292,9 +306,9 @@ try {
     </div>
     <div class="content">
       <h1>Cambio de Contraseña Solicitado</h1>
-      <p>Hola [Franco],</p>
+      <p>Hola '.$datos_usuario->nombres_apellidos.',</p>
       <p>Hemos recibido una solicitud para restablecer tu contraseña. Si tú realizaste esta solicitud, haz clic en el siguiente botón para cambiar tu contraseña:</p>
-      <a href="[ENLACE_DE_CAMBIO]" class="button">Restablecer contraseña</a>
+      <a href="'.BASE_URL.'reset-password?data='.$datos_usuario->id.'&data2='.$token.'" class="button">Restablecer contraseña</a>
       <p>Si no solicitaste este cambio, puedes ignorar este mensaje. Tu contraseña actual seguirá siendo válida.</p>
       <p>Gracias,<br>El equipo de Brisa Marina</p>
     </div>
