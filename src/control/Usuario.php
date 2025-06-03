@@ -292,7 +292,7 @@ try {
     </div>
     <div class="content">
       <h1>Cambio de Contraseña Solicitado</h1>
-      <p>Hola [Nombre del cliente],</p>
+      <p>Hola [Franco],</p>
       <p>Hemos recibido una solicitud para restablecer tu contraseña. Si tú realizaste esta solicitud, haz clic en el siguiente botón para cambiar tu contraseña:</p>
       <a href="[ENLACE_DE_CAMBIO]" class="button">Restablecer contraseña</a>
       <p>Si no solicitaste este cambio, puedes ignorar este mensaje. Tu contraseña actual seguirá siendo válida.</p>
