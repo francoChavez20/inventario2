@@ -175,6 +175,7 @@ function cargar_sede_filtro(sedes) {
      const formData = new FormData();
     formData.append('id', id);
     formData.append('token', token);
+    formData.append('sesion', '');
     try {
         let respuesta = await fetch(base_url_server + 'src/control/Usuario.php?tipo=validar_datos_reset_password',{
             method: 'POST',
@@ -183,11 +184,136 @@ function cargar_sede_filtro(sedes) {
             body: formData
         });
         let json = await respuesta.json();
-        if (json.status) {
-            location.reload();
+        if (json.status == false) {
+            Swal.fire({
+        type: 'error',
+        title: 'Error de link',
+        text: "link caducado, verifique su correo",
+        footer: '',
+        timer: 1000
+    });
+    let formulario = document.getElementById('frm_reset_password');
+    formulario.innerHTML= `
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Enlace inválido</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #74ebd5, #acb6e5);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 10px 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      animation: slideDown 0.6s ease-out;
+    }
+
+    .card img {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+
+    .card h1 {
+      color: #e63946;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 16px;
+      color: #333;
+    }
+
+    .btn {
+      margin-top: 25px;
+      padding: 12px 20px;
+      background-color:rgb(240, 33, 33);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #1d3557;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <img src="https://cdn-icons-png.flaticon.com/512/463/463612.png" alt="Error">
+    <h1>¡Link inválido!</h1>
+    <p>Este enlace de recuperación ha expirado o no es válido. Por favor solicita uno nuevo.</p>
+    <a href="${base_url}login" class="btn">Volver a recuperar contraseña</a>
+  </div>
+
+</body>
+</html>
+`;
+    //location.replace(base_url + "login");
         }
         
     } catch (e) {
         console.log("Error al cargar instituciones" + e);
     }
+}
+
+function validar_imput_password() {
+    let pass1 = document.getElementById('password').value;
+    let pass2 = document.getElementById('password1').value;
+    if (pass1 !== pass2) {
+        Swal.fire({
+        type: 'error',
+        title: 'Error',
+        text: "contraseña no coincide",
+        footer: '',
+        timer: 1500
+    })
+    return;
+}
+if (pass1.length<8 && pass2.length<8) {
+         Swal.fire({
+        type: 'error',
+        title: 'Error',
+        text: "la contraseña debe tener minimo 8 caracteres",
+        footer: '',
+        timer: 1500
+    })
+}
+actualizar_password();
+}
+
+async function actualizar_passworde() {
+    //enviar informacionn de password y id al controlador usuario
+    // recibir informacion e incriptar la nueva contraseña
+    // guardar en base de datos y actualizar cam,pos de reset_password = 0 y token = 'vacio'
+    // notificar a usuario sobre el estado de contraseña
 }

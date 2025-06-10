@@ -308,7 +308,7 @@ try {
       <h1>Cambio de Contraseña Solicitado</h1>
       <p>Hola '.$datos_usuario->nombres_apellidos.',</p>
       <p>Hemos recibido una solicitud para restablecer tu contraseña. Si tú realizaste esta solicitud, haz clic en el siguiente botón para cambiar tu contraseña:</p>
-      <a href="'.BASE_URL.'reset-password?data='.$datos_usuario->id.'&data2='.$token.'" class="button">Restablecer contraseña</a>
+      <a href="'.BASE_URL.'reset-password/?data='.$datos_usuario->id.'&data2='.urlencode($token).'" class="button">Restablecer contraseña</a>
       <p>Si no solicitaste este cambio, puedes ignorar este mensaje. Tu contraseña actual seguirá siendo válida.</p>
       <p>Gracias,<br>El equipo de Brisa Marina</p>
     </div>
