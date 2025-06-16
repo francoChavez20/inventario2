@@ -308,12 +308,55 @@ if (pass1.length<8 && pass2.length<8) {
         timer: 1500
     })
 }
-actualizar_password();
+actualizar_passworde(d, token, nuevaPassword);
 }
 
-async function actualizar_passworde() {
+  async function actualizar_passworde(id, token, nuevaPassword) {
+    // Crear FormData para enviar al servidor
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('token', token);
+    formData.append('password', nuevaPassword);
+    try {
+        let respuesta = await fetch(base_url_server + 'src/control/Usuario.php?tipo=actializar_password', {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            body: formData
+        });
+        json = await respuesta.json();
+        if (json.status) {
+            Swal.fire({
+                type: 'success',
+                title: 'Actualizar',
+                text: json.mensaje,
+                confirmButtonClass: 'btn btn-confirm mt-2',
+                footer: '',
+                confirmButtonText: "Aceptar"
+            });
+        } else if (json.msg == "Error_Sesion") {
+            alerta_sesion();
+        } else {
+            Swal.fire({
+                type: 'error',
+                title: 'Error',
+                text: json.mensaje,
+                confirmButtonClass: 'btn btn-confirm mt-2',
+                footer: '',
+                timer: 1000
+            })
+        }
+        //console.log(json);
+    } catch (e) {
+        console.log("Error al actualizar periodo" + e);
+    }
+
+  }
+
+
+  
     //enviar informacionn de password y id al controlador usuario
     // recibir informacion e incriptar la nueva contraseña
-    // guardar en base de datos y actualizar cam,pos de reset_password = 0 y token = 'vacio'
+    // guardar en base de datos y actualizar campos de reset_password = 0 y token = 'vacio'
     // notificar a usuario sobre el estado de contraseña
-}
+    
