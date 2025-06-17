@@ -334,120 +334,53 @@ try {
         //print_r($token);
     }
 }
- // borrar
 
-if ($tipo == "actualizar_password") {
-    $arr_Respuesta = array('status' => false, 'msg' => 'Error_Sesion');
+ if ($tipo == "cambiar_password") {
+    $id_usuario = $_POST['id'];
+    $nueva_password = $_POST['password'];
+    $token_email = $_POST['token'];
+    
+    $arr_Respuesta = array('status' => false, 'msg' => 'Hubo un error al actualizar contraseña');
 
-    // Verificar sesión activa con id_sesion y token (supongo vienen de algún lugar)
-    if ($objSesion->verificar_sesion_si_activa($id_sesion, $token)) {
+    $datos_usuario = $objUsuario->buscarUsuarioById($id_usuario);
+    
+    if ($datos_usuario && $datos_usuario->reset_password == 1 && password_verify($datos_usuario->token_password, $token_email)) {
+        $resultado = $objUsuario->CambiarPassword($id_usuario, $nueva_password);
         
-        if ($_POST) {
-            $id = isset($_POST['id']) ? $_POST['id'] : '';
-            $password = isset($_POST['password']) ? $_POST['password'] : '';
-
-            if ($id == "" || $password == "") {
-                $arr_Respuesta = array('status' => false, 'mensaje' => 'Error, campos vacíos');
-            } else {
-                // Llama a la función que actualiza la contraseña (asegúrate que exista)
-                $actualizado = $objUsuario->actualizarPassword($id, $password);
-
-                if ($actualizado) {
-                    $arr_Respuesta = array('status' => true, 'mensaje' => 'Contraseña actualizada correctamente');
-                } else {
-                    $arr_Respuesta = array('status' => false, 'mensaje' => 'Error al actualizar la contraseña');
-                }
-            }
+        if ($resultado) {
+            $arr_Respuesta = array('status' => true,'msg' => 'Contraseña actualizada correctamente');
         } else {
-            $arr_Respuesta = array('status' => false, 'mensaje' => 'No se enviaron datos');
-        }
-    }
-
-    echo json_encode($arr_Respuesta);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- // borrar prueba
-
-
-if (isset($_POST['tipo']) && $_POST['tipo'] === 'actualizar_password') {
-    $arr_Respuesta = ['status' => false, 'mensaje' => 'Error_Sesion'];
-
-    // Validar que se reciban los datos necesarios
-    if (isset($_POST['id'], $_POST['token'], $_POST['password'])) {
-        $id = $_POST['id'];
-        $token = $_POST['token'];
-        $password_plano = $_POST['password'];
-
-        // Obtener usuario por ID
-        $usuario = $objUsuario->getUsuarioPorId($id);
-
-        if ($usuario) {
-            // Verificar token con hash_equals para seguridad
-            if (hash_equals($usuario['token_password'], $token)) {
-                // Hashear la nueva contraseña
-                $password_hash = password_hash($password_plano, PASSWORD_BCRYPT);
-
-                // Actualizar contraseña, y además actualizar token y reset_password
-                $actualizar = $objUsuario->actualizarPasswordConToken(
-                    $id,
-                    $password_hash,
-                    'vacio',     // token nuevo vacío
-                    0           // reset_password = 0 (contraseña ya reseteada)
-                );
-
-                if ($actualizar) {
-                    $arr_Respuesta = [
-                        'status' => true,
-                        'mensaje' => 'Contraseña actualizada correctamente'
-                    ];
-                } else {
-                    $arr_Respuesta = [
-                        'status' => false,
-                        'mensaje' => 'Error al actualizar la contraseña, intente nuevamente'
-                    ];
-                }
-            } else {
-                $arr_Respuesta = [
-                    'status' => false,
-                    'mensaje' => 'Token inválido o expirado'
-                ];
-            }
-        } else {
-            $arr_Respuesta = [
-                'status' => false,
-                'mensaje' => 'Usuario no encontrado'
-            ];
+            $arr_Respuesta = array('status' => false,'msg' => 'Error al guardar en la base de datos');
         }
     } else {
-        $arr_Respuesta = [
-            'status' => false,
-            'mensaje' => 'Faltan datos requeridos'
-        ];
+        $arr_Respuesta = array('status' => false,'msg' => 'Token inválido o expirado');
     }
-
+    
     echo json_encode($arr_Respuesta);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

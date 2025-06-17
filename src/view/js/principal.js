@@ -307,51 +307,68 @@ if (pass1.length<8 && pass2.length<8) {
         footer: '',
         timer: 1500
     })
+    return;
 }
-actualizar_passworde(d, token, nuevaPassword);
+actualizar_password();
 }
 
-  async function actualizar_passworde(id, token, nuevaPassword) {
-    // Crear FormData para enviar al servidor
+async function actualizar_password() {
+    
+    let id = document.getElementById('data').value;
+    let token = document.getElementById('data2').value;
+    let nueva_password = document.getElementById('password').value;
+
     const formData = new FormData();
     formData.append('id', id);
     formData.append('token', token);
-    formData.append('password', nuevaPassword);
+    formData.append('password', nueva_password);
+    formData.append('sesion', '');
+    
     try {
-        let respuesta = await fetch(base_url_server + 'src/control/Usuario.php?tipo=actializar_password', {
+        
+        let respuesta = await fetch(base_url_server + 'src/control/Usuario.php?tipo=cambiar_password', {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',
             body: formData
         });
-        json = await respuesta.json();
-        if (json.status) {
+        
+        let json = await respuesta.json();
+        
+        if (json.status == true) {
             Swal.fire({
                 type: 'success',
-                title: 'Actualizar',
-                text: json.mensaje,
+                title: 'Éxito',
+                text: json.msg,
                 confirmButtonClass: 'btn btn-confirm mt-2',
                 footer: '',
-                confirmButtonText: "Aceptar"
+                timer: 2000
+            }).then(() => {
+                location.replace(base_url + "login");
             });
-        } else if (json.msg == "Error_Sesion") {
-            alerta_sesion();
         } else {
             Swal.fire({
                 type: 'error',
                 title: 'Error',
-                text: json.mensaje,
+                text: json.msg,
                 confirmButtonClass: 'btn btn-confirm mt-2',
                 footer: '',
-                timer: 1000
-            })
+                timer: 2000
+            });
         }
-        //console.log(json);
-    } catch (e) {
-        console.log("Error al actualizar periodo" + e);
+        
+    } catch (error) {
+        console.log("Error al actualizar contraseña: " + error);
+        Swal.fire({
+            type: 'error',
+            title: 'Error',
+            text: 'Error. Intente nuevamente.',
+            confirmButtonClass: 'btn btn-confirm mt-2',
+            footer: '',
+            timer: 2000
+        });
     }
-
-  }
+}
 
 
   
