@@ -34,11 +34,9 @@ if (!isset($ruta[1]) || $ruta[1]=="") {
     } else {
         $respuesta = json_decode($response);
         //print_r($respuesta);
-   
-
-    ?>
-    <!--
-<!DOCTYPE html>
+        $contenido_pdf = '';
+        $contenido_pdf .= '
+        <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -108,9 +106,9 @@ if (!isset($ruta[1]) || $ruta[1]=="") {
   <div class="datos">
     <p><span class="titulo">ENTIDAD :</span> DIRECCION REGIONAL DE EDUCACION - AYACUCHO</p>
     <p><span class="titulo">AREA :</span> OFICINA DE ADMINISTRACIÓN</p>
-    <p><span class="titulo">ORIGEN :</span> <?php echo $respuesta->amb_origen->codigo.' - '.$respuesta->amb_origen->detalle; ?> </p>
-    <p><span class="titulo">DESTINO :</span> <?php echo $respuesta->amb_destino->codigo.' - '.$respuesta->amb_destino->detalle; ?></p>
-    <p><span class="motivo">MOTIVO (*) :</span> <?php echo $respuesta->movimiento->descripcion; ?><p>
+    <p><span class="titulo">ORIGEN :</span>  '.$respuesta->amb_origen->codigo.'-'.$respuesta->amb_origen->detalle .' </p>
+    <p><span class="titulo">DESTINO :</span>  '.$respuesta->amb_destino->codigo.'-'.$respuesta->amb_destino->detalle .'</p>
+    <p><span class="motivo">MOTIVO (*) :</span> '. $respuesta->movimiento->descripcion.'<p>
 
 </div>
   <table>
@@ -119,30 +117,36 @@ if (!isset($ruta[1]) || $ruta[1]=="") {
         <th>ITEM</th>
         <th>CÓDIGO PATRIMONIAL</th>
         <th>NOMBRE DEL BIEN</th>
-        <th>MARCA</th>
+        <th>MARCA</th>             
         <th>COLOR</th>
         <th>MODELO</th>
         <th>ESTADO</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody>';
+   
+
+    ?>
+
+
      <?php 
      $contador = 1;
      foreach ($respuesta->detalle as $detalle) {
-        echo"<tr>";
-        echo"<td>".$contador."</td>";
-        echo"<td>".$detalle->cod_patrimonial."</td>";
-        echo"<td>".$detalle->denominacion."</td>";
-        echo"<td>".$detalle->marca."</td>";
-        echo"<td>".$detalle->modelo."</td>";
-        echo"<td>".$detalle->color."</td>";
-        echo"<td>".$detalle->estado_conservacion."</td>";
-        echo"</tr>";
+        $contenido_pdf .= "<tr>";
+        $contenido_pdf .= "<td>".$contador."</td>";
+        $contenido_pdf .= "<td>".$detalle->cod_patrimonial."</td>";
+        $contenido_pdf .= "<td>".$detalle->denominacion."</td>";
+        $contenido_pdf .= "<td>".$detalle->marca."</td>";
+        $contenido_pdf .= "<td>".$detalle->modelo."</td>";
+        $contenido_pdf .= "<td>".$detalle->color."</td>";
+        $contenido_pdf .= "<td>".$detalle->estado_conservacion."</td>";
+        $contenido_pdf .= "</tr>";
         $contador+=1;
 
      }
-     ?>
-    </tbody>
+
+     $contenido_pdf .='
+     </tbody>
   </table>
 
   <div class="ubicacion">
@@ -150,8 +154,7 @@ if (!isset($ruta[1]) || $ruta[1]=="") {
 $date = new DateTime($respuesta->movimiento->fecha_registro);
 
 // Crear el formateador en español (Perú)
-$formatter = new IntlDateFormatter(
-    'es_PE',                // Idioma
+
     IntlDateFormatter::LONG, // Nivel de detalle (ej: 5 de julio de 2027)
     IntlDateFormatter::NONE // Solo la fecha, sin hora
 );
@@ -177,8 +180,10 @@ echo $formatter->format($date);
   </div>
 
 </body>
-</html>
--->
+</html>';
+     ?>
+    
+
     <?php
 require_once('./vendor/tecnickcom/tcpdf/tcpdf.php');
 
@@ -194,6 +199,13 @@ $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
 // set font
-$pdf->SetFont('dejavusans', '', 10);
+$pdf->SetFont('helvetica', 'B', 12);
+
+
+//Agregar pagina
+$pdf->AddPage();
+$pdf->writeHTML($contenido_pdf);
+ob_clean();
+$pdf->Output('reporte_movimiento.pdf', 'I');
 
     }
