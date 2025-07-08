@@ -33,5 +33,167 @@ if (!isset($ruta[1]) || $ruta[1]=="") {
         echo "cURL Error #:" . $err; // mostramos el error
     } else {
         $respuesta = json_decode($response);
-        print_r($respuesta);
+        //print_r($respuesta);
+   
+
+    ?>
+    <!--
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Papeleta de Rotación de Bienes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+
+    h2 {
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .datos {
+      margin-top: 30px;
+      line-height: 2;
+    }
+
+    .datos span {
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: center;
+    }
+  .motivo {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .firmas {
+      margin-top: 80px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .firma {
+      text-align: center;
+      width: 45%;
+    }
+
+    .ubicacion {
+      text-align: right;
+      margin-top: 30px;
+    }
+
+    .subrayado {
+      border-bottom: 1px solid black;
+      display: inline-block;
+      width: 250px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>PAPELETA DE ROTACIÓN DE BIENES</h2>
+
+  <div class="datos">
+    <p><span class="titulo">ENTIDAD :</span> DIRECCION REGIONAL DE EDUCACION - AYACUCHO</p>
+    <p><span class="titulo">AREA :</span> OFICINA DE ADMINISTRACIÓN</p>
+    <p><span class="titulo">ORIGEN :</span> <?php echo $respuesta->amb_origen->codigo.' - '.$respuesta->amb_origen->detalle; ?> </p>
+    <p><span class="titulo">DESTINO :</span> <?php echo $respuesta->amb_destino->codigo.' - '.$respuesta->amb_destino->detalle; ?></p>
+    <p><span class="motivo">MOTIVO (*) :</span> <?php echo $respuesta->movimiento->descripcion; ?><p>
+
+</div>
+  <table>
+    <thead>
+      <tr>
+        <th>ITEM</th>
+        <th>CÓDIGO PATRIMONIAL</th>
+        <th>NOMBRE DEL BIEN</th>
+        <th>MARCA</th>
+        <th>COLOR</th>
+        <th>MODELO</th>
+        <th>ESTADO</th>
+      </tr>
+    </thead>
+    <tbody>
+     <?php 
+     $contador = 1;
+     foreach ($respuesta->detalle as $detalle) {
+        echo"<tr>";
+        echo"<td>".$contador."</td>";
+        echo"<td>".$detalle->cod_patrimonial."</td>";
+        echo"<td>".$detalle->denominacion."</td>";
+        echo"<td>".$detalle->marca."</td>";
+        echo"<td>".$detalle->modelo."</td>";
+        echo"<td>".$detalle->color."</td>";
+        echo"<td>".$detalle->estado_conservacion."</td>";
+        echo"</tr>";
+        $contador+=1;
+
+     }
+     ?>
+    </tbody>
+  </table>
+
+  <div class="ubicacion">
+  <?php
+$date = new DateTime($respuesta->movimiento->fecha_registro);
+
+// Crear el formateador en español (Perú)
+$formatter = new IntlDateFormatter(
+    'es_PE',                // Idioma
+    IntlDateFormatter::LONG, // Nivel de detalle (ej: 5 de julio de 2027)
+    IntlDateFormatter::NONE // Solo la fecha, sin hora
+);
+
+// Mostrar la fecha formateada
+echo $formatter->format($date);
+?>
+
+
+
+
+  </div>
+
+  <div class="firmas">
+    <div class="firma">
+      <div>-------------------------------</div>
+      <div>ENTREGUÉ CONFORME</div>
+    </div>
+    <div class="firma">
+      <div>-------------------------------</div>
+      <div>RECIBÍ CONFORME</div>
+    </div>
+  </div>
+
+</body>
+</html>
+-->
+    <?php
+require_once('./vendor/tecnickcom/tcpdf/tcpdf.php');
+
+$pdf = new TCPDF();
+// set document information
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('Franco');
+$pdf->SetTitle('Reporte de movimiento');
+
+$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+
+// salto de pagina automatico
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+// set font
+$pdf->SetFont('dejavusans', '', 10);
+
     }
