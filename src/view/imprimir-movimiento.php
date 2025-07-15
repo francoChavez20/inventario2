@@ -89,30 +89,67 @@ if ($err) {
         </div>
     </div>';
 
-    // ---------------------------------------
-    // CABECERA Y PIE DE PAGINA PERSONALIZADOS
-    // ---------------------------------------
 
     require_once('./vendor/tecnickcom/tcpdf/tcpdf.php');
 
-    // Clase extendida para cabecera y pie de página
-    class MYPDF extends TCPDF {
-        // Cabecera
-        public function Header() {
-            $this->SetFont('helvetica', 'B', 12);
-            $this->Cell(0, 10, 'DIRECCIÓN REGIONAL DE EDUCACIÓN - AYACUCHO', 0, 1, 'C');
-            $this->SetFont('helvetica', '', 10);
-            $this->Cell(0, 10, 'Oficina de Administración - Reporte de Movimiento', 0, 1, 'C');
-            $this->Ln(5); // espacio después de la cabecera
-        }
+   class MYPDF extends TCPDF {
 
-        // Pie de página
-        public function Footer() {
-            $this->SetY(-15);
-            $this->SetFont('helvetica', 'I', 8);
-            $this->Cell(0, 10, 'Página ' . $this->getAliasNumPage() . ' de ' . $this->getAliasNbPages(), 0, 0, 'C');
-        }
+    public function Header() {
+      
+      $this->Image('./src/view/pp/assets/images/logo.png', 15, 4, 33);
+
+      $this->Image('./src/view/pp/assets/images/drea.png', 170, 2, 24);
+
+
+
+        $this->SetFont('helvetica', 'B', 12);
+        $this->MultiCell(0, 5, "GOBIERNO REGIONAL DE AYACUCHO\nDIRECCIÓN REGIONAL DE EDUCACIÓN DE AYACUCHO\nDIRECCIÓN DE ADMINISTRACIÓN", 0, 'C');
+
+       
+       $y = $this->GetY();
+       $this->SetLineStyle(['width' => 0.3, 'color' => [51, 125, 255]]);
+        $this->Line(15, $y, 195, $y);
+        $y += 1.0; 
+
+        $this->SetLineStyle(['width' => 1.0, 'color' => [51, 125, 255]]);
+        $this->Line(15, $y, 195, $y);
+        $y += 1.2; 
+
+      
+        $this->SetLineStyle(['width' => 0.3, 'color' => [51, 125, 255]]);
+        $this->Line(15, $y, 195, $y);
+
+
+         $this->SetFont('helvetica', '', 10);
+        $this->Cell(0, 10, 'ANEXO 4', 0, 1, 'C');
+
+        $this->Ln(4); 
+
+
     }
+
+    // Pie de página
+    public function Footer() {
+
+         $y = $this->GetY();
+       $this->SetLineStyle(['width' => 0.3, 'color' => [51, 125, 255]]);
+        $this->Line(15, $y, 195, $y);
+        $y += 1.0;
+
+      
+        $this->SetLineStyle(['width' => 1.0, 'color' => [51, 125, 255]]);
+        $this->Line(15, $y, 195, $y);
+        $y += 1.2;
+
+        $this->SetLineStyle(['width' => 0.3, 'color' => [51, 125, 255]]);
+        $this->Line(15, $y, 195, $y);
+
+        $this->SetY(-15);
+        $this->SetFont('helvetica', 'I', 8);
+        $this->Cell(0, 10, 'Página ' . $this->getAliasNumPage() . ' de ' . $this->getAliasNbPages(), 0, 0, 'C');
+    }
+}
+
 
     // Crear PDF
     $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -120,7 +157,7 @@ if ($err) {
     $pdf->SetAuthor('Franco');
     $pdf->SetTitle('Reporte de movimiento');
 
-    $pdf->SetMargins(15, 40, 15); // margen con espacio para header
+    $pdf->SetMargins(15, 55, 15);
     $pdf->SetHeaderMargin(10);
     $pdf->SetFooterMargin(15);
     $pdf->SetAutoPageBreak(TRUE, 20);
