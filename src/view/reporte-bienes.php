@@ -5,64 +5,71 @@ require './vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-// Crear hoja de cálculo
+// CONEXIÓN A LA BD
+$host = "localhost";
+$dbname = "inventario";
+$user = "root";
+$password = "root";
+
+$conexion = new mysqli($host, $user, $password, $dbname);
+if ($conexion->connect_error) {
+    die("Conexión fallida: " . $conexion->connect_error);
+}
+
+// CONSULTA
+$sql = "SELECT * FROM bienes ORDER BY id ASC";
+$resultado = $conexion->query($sql);
+
+// CREAR EXCEL
 $spreadsheet = new Spreadsheet();
 $spreadsheet->getProperties()
     ->setCreator("yp")
     ->setLastModifiedBy("yo")
-    ->setTitle("yo")
-    ->setDescription("yo");
+    ->setTitle("Bienes")
+    ->setDescription("Listado de bienes");
 
-$activeWorksheet = $spreadsheet->getActiveSheet();
-$activeWorksheet->setTitle("hoja1");
+$hoja = $spreadsheet->getActiveSheet();
+$hoja->setTitle("Bienes");
 
-/*// Encabezados de columna
-$activeWorksheet->setCellValue('A2', 'N°1');
-$activeWorksheet->setCellValue('B2', 'X');
-$activeWorksheet->setCellValue('C2', 'N°2');
-$activeWorksheet->setCellValue('D2', '=');
-$activeWorksheet->setCellValue('E2', 'Resultado');
-
-// Llenar filas con datos del 1 al 10
-for ($i = 1; $i <= 10; $i++) {
-    $fila = $i + 2; // empieza desde la fila 3
-    $activeWorksheet->setCellValue('A' . $fila, 1);         // Número 1
-    $activeWorksheet->setCellValue('B' . $fila, 'X');         // Símbolo X
-    $activeWorksheet->setCellValue('C' . $fila, $i);         // Número 2 (igual que el primero)
-    $activeWorksheet->setCellValue('D' . $fila, '=');         // Símbolo igual
-    $activeWorksheet->setCellValue('E' . $fila, 1 * $i);     // Resultado
-}*/
-/*$ruta = explode("/", $_GET['views']);
-if (!isset($ruta[1]) || $ruta[1] == "") {
-    header("location:" . BASE_URL . "movimientos;");
+// FUNCIÓN PARA CONVERTIR NÚMEROS A LETRAS DE COLUMNA (A, B, C, ...)
+function getColLetter($index) {
+    $letter = '';
+    while ($index > 0) {
+        $index--;
+        $letter = chr(65 + ($index % 26)) . $letter;
+        $index = intval($index / 26);
+    }
+    return $letter;
 }
 
-$curl = curl_init();
-curl_setopt_array($curl, array(
-    CURLOPT_URL => BASE_URL_SERVER . "src/control/Movimiento.php?tipo=buscar_movimiento_id&sesion=" . $_SESSION['sesion_id'] . "&token=" . $_SESSION['sesion_token'] . "&data=" . $ruta[1],
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_ENCODING => "",
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 30,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => "GET",
-    CURLOPT_HTTPHEADER => array(
-        "x-rapidapi-host: " . BASE_URL_SERVER,
-        "x-rapidapi-key: XXXX"
-    ),
-));
+// SI HAY RESULTADOS
+if ($resultado->num_rows > 0) {
+    $campos = $resultado->fetch_fields();
+    foreach ($campos as $i => $campo) {
+        $col = getColLetter($i + 1);
+        $hoja->setCellValue($col . '1', strtoupper($campo->name));
+    }
 
-$response = curl_exec($curl);
-$err = curl_error($curl);
-curl_close($curl);
-
-if ($err) {
-    echo "cURL Error #:" . $err;
+    $filaExcel = 2;
+    while ($fila = $resultado->fetch_assoc()) {
+        foreach (array_values($fila) as $i => $valor) {
+            $col = getColLetter($i + 1);
+            $hoja->setCellValue($col . $filaExcel, $valor);
+        }
+        $filaExcel++;
+    }
 } else {
-    $respuesta = json_decode($response);
+    $hoja->setCellValue("A1", "No hay datos en la tabla bienes.");
 }
-*/
-// Guardar archivo
+
+// CERRAR CONEXIÓN
+$conexion->close();
+
+// FORZAR DESCARGA DEL ARCHIVO
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+header('Content-Disposition: attachment;filename="tabla_bienes.xlsx"');
+header('Cache-Control: max-age=0');
+
 $writer = new Xlsx($spreadsheet);
-$writer->save('tabla_multiplicacion.xlsx');
+$writer->save('php://output'); // Salida directa al navegador
+exit;
