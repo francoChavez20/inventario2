@@ -33,7 +33,7 @@ if ($resultado->num_rows > 0) {
     $colFin = getColLetter($totalColumnas);
 
     $hoja->mergeCells('A1:' . $colFin . '1');
-    $hoja->setCellValue('A1', "LISTADO DE BIENES");
+    $hoja->setCellValue('A1', "LISTA DE BIENES");
     $hoja->getStyle('A1')->getFont()->setSize(26)->setBold(true);
     $hoja->getStyle('A1')->getAlignment()
         ->setHorizontal(Alignment::HORIZONTAL_CENTER)
@@ -70,7 +70,7 @@ if ($resultado->num_rows > 0) {
 $conexion->close();
 
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="tabla_bienes.xlsx"');
+header('Content-Disposition: attachment;filename="Reporte de bienes.xlsx"');
 header('Cache-Control: max-age=0');
 
 $writer = new Xlsx($spreadsheet);
