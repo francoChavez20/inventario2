@@ -43,7 +43,13 @@
         <div class="card">
             <div class="card-body">
 
-                <a href="<?php BASE_URL ?>reporte-bienes" class="btn btn-success"> <i class="fa fa-file-excel"></i> </a>
+                <a href="<?php echo BASE_URL ?>reporte-bienes" class="btn btn-success btn-lg m-3">
+                   <i class="fa fa-file-excel"></i> Descargar Reporte excel
+                </a>
+                <a href="<?php echo BASE_URL ?>imprimir-bienes" class="btn btn-danger btn-lg m-3">
+                   <i class="fa fa-file-pdf"></i> Descargar Reporte PDF
+                </a>
+
 
                 <h4 class="card-title">Resultados de Búsqueda</h4>
                 <div id="filtros_tabla_header" class="form-group  row page-title-box d-flex align-items-center justify-content-between m-0 mb-1 p-0">
