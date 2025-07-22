@@ -4,7 +4,7 @@ session_start();
 $datos = array(
     "sesion" => $_SESSION['sesion_id'],
     "token" => $_SESSION['sesion_token'],
-    "ies" => "1", // <-- Cambia según tu institución activa
+    "ies" => "1",
     "pagina" => 1,
     "cantidad_mostrar" => 9999,
     "busqueda_tabla_codigo" => "",
@@ -80,34 +80,41 @@ $pdf->SetAutoPageBreak(TRUE, 20);
 $pdf->SetFont('helvetica', '', 9);
 $pdf->AddPage();
 
+// Título adicional grande antes de la tabla
+$pdf->SetFont('helvetica', 'B', 13);
+$pdf->Cell(0, 10, 'LISTADO GENERAL DE BIENES', 0, 1, 'C');
+$pdf->Ln(2);
+$pdf->SetFont('helvetica', '', 9);
+
+// Tabla HTML bien alineada
 $contenido = '
-<table border="1" cellpadding="3">
-    <thead>
-        <tr style="background-color:#f0f0f0;">
-            <th width="4%">#</th>
-            <th width="15%">Cód. Patrimonial</th>
-            <th width="20%">Denominación</th>
-            <th width="10%">Marca</th>
-            <th width="10%">Modelo</th>
-            <th width="8%">Color</th>
-            <th width="8%">Estado</th>
-            <th width="25%">Ambiente</th>
+<table border="1" cellpadding="4" cellspacing="0">
+    <thead style="font-weight:bold; background-color:#f0f0f0;">
+        <tr>
+            <th>#</th>
+            <th>Cód. Patrimonial</th>
+            <th>Denominación</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Color</th>
+            <th>Estado</th>
+            <th>Ambiente</th>
         </tr>
     </thead>
     <tbody>';
 
 $contador = 1;
 foreach ($data->contenido as $bien) {
-    $contenido .= "<tr>
-        <td>$contador</td>
-        <td>{$bien->cod_patrimonial}</td>
-        <td>{$bien->denominacion}</td>
-        <td>{$bien->marca}</td>
-        <td>{$bien->modelo}</td>
-        <td>{$bien->color}</td>
-        <td>{$bien->estado_conservacion}</td>
-        <td>{$bien->id_ambiente}</td>
-    </tr>";
+    $contenido .= '<tr>
+        <td>' . $contador . '</td>
+        <td>' . htmlspecialchars($bien->cod_patrimonial) . '</td>
+        <td>' . htmlspecialchars($bien->denominacion) . '</td>
+        <td>' . htmlspecialchars($bien->marca) . '</td>
+        <td>' . htmlspecialchars($bien->modelo) . '</td>
+        <td>' . htmlspecialchars($bien->color) . '</td>
+        <td>' . htmlspecialchars($bien->estado_conservacion) . '</td>
+        <td>' . htmlspecialchars($bien->id_ambiente) . '</td>
+    </tr>';
     $contador++;
 }
 
