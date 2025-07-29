@@ -46,7 +46,7 @@
                 <a href="<?php echo BASE_URL ?>reporte-bienes" class="btn btn-success btn-lg m-3">
                    <i class="fa fa-file-excel"></i> Descargar Reporte excel
                 </a>
-                <a href="<?php echo BASE_URL ?>imprimir-bienes" class="btn btn-danger btn-lg m-3">
+                <a href="<?php echo BASE_URL ?>imprimir-bienes" class="btn btn-danger btn-lg my-3">
                    <i class="fa fa-file-pdf"></i> Descargar Reporte PDF
                 </a>
 
